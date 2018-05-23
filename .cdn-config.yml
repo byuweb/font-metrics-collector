@@ -10,3 +10,4 @@ entrypoints:
   index.js: 'Examines browser support and downloads the appropriate component bundle'
 docs: https://github.com/byuweb/byu-theme-components
 type: javascript
+prerelease: true
