@@ -1,0 +1,12 @@
+---
+name: Font Load Time Monitor
+description: Collects metrics on the load times of our font packages
+resources:
+  - src: client/*.js
+    dest: ./
+  - src: client/*.js.map
+    dest: ./
+entrypoints:
+  index.js: 'Examines browser support and downloads the appropriate component bundle'
+docs: https://github.com/byuweb/byu-theme-components
+type: javascript

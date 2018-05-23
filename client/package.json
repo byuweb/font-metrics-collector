@@ -1,0 +1,13 @@
+{
+  "name": "font-metrics-client",
+  "version": "0.1.0",
+  "main": "index.js",
+  "author": "Joseph Moore <joseph_moore@byu.edu>",
+  "license": "Apache-2.0",
+  "scripts": {
+    "build": "uglifyjs index.js -o index.min.js --source-map"
+  },
+  "devDependencies": {
+    "uglify-js": "^3.3.27"
+  }
+}

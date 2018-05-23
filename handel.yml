@@ -1,0 +1,36 @@
+version: 1
+
+name: web-font-metrics
+
+tags:
+  team: "Web Community Engineering Group"
+  if-questions-contact: "Joseph Moore or James Spiers or Sherwin Harris"
+  data-sensitivity: public
+
+environments:
+  dev:
+    stats-table:
+      type: dynamodb
+      partition_key: # Required, NOT updateable
+        name: metric_id
+        type: String
+      sort_key:
+        name: metric_timestamp
+        type: Number
+      provisioned_throughput:
+        read_capacity_units: 1-20
+        write_capacity_units: 10-200
+
+    beacon-receiver:
+      type: apigateway
+      proxy:
+        path_to_code: ./server/
+        handler: index.handle
+        runtime: nodejs8.10
+        memory: 128
+        timeout: 5
+      dependencies:
+        - stats-table
+
+
+
