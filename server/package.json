@@ -1,0 +1,13 @@
+{
+  "name": "font-metrics-server",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.js",
+  "author": "Joseph Moore <joseph_moore@byu.edu>",
+  "license": "Apache-2.0",
+  "scripts": {},
+  "devDependencies": {},
+  "dependencies": {
+    "useragent": "^2.3.0"
+  }
+}

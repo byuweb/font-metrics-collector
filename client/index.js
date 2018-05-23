@@ -4,7 +4,7 @@
         return;
     }
 
-    var propsWeWant = ["connectStart", "connectEnd",
+    var propsWeWant = ["duration", "connectStart", "connectEnd",
         "domainLookupStart", "domainLookupEnd",
         "fetchStart",
         "redirectStart", "redirectEnd",
@@ -12,7 +12,7 @@
         "responseStart", "responseEnd",
         "secureConnectionStart"];
 
-    var callbackUrl = window.byuFontMetricsCallbackUrl || 'https://em689ub362.execute-api.us-west-2.amazonaws.com/dev/beacon';
+    var callbackUrl = window.byuFontMetricsCallbackUrl || 'https://font-metrics-dev.cdn.byu.edu/beacon';
 
     if (document.readyState === 'complete') {
         console.log('document is ready');
@@ -36,11 +36,13 @@
                 return it.name.indexOf('://cloud.typography.com') >= 0
             });
 
+        var navEntries = window.performance.getEntriesByType('navigation');
+
         if (fonts.length === 0) {
             return;
         }
 
-        var body = getBeaconBody(fonts);
+        var body = getBeaconBody(fonts, navEntries);
 
         sendBeaconMessage(callbackUrl, body);
     }
@@ -57,12 +59,28 @@
         }
     }
 
-    function getBeaconBody(entries) {
-        return entries.map(beaconBodyForEntry).join('\n');
+    function getBeaconBody(entries, nav) {
+        var navLines = nav.map(function(entry) {
+            var value;
+            if ('responseEnd' in entry) {
+                value = String(entry.responseEnd)
+            } else {
+                value = '-1';
+            }
+            return 'nav\tresponseEnd=' + value;
+        });
+
+        var fontLines = entries.map(beaconBodyForEntry);
+
+        return navLines.concat(fontLines).join('\n');
     }
 
     function beaconBodyForEntry(entry) {
-        return entry.name + '\t' + propsWeWant.map(bodyForValue).join('\t');
+        return entry.name + '\t' + propsWeWant
+            .map(bodyForValue)
+            .filter(pair => pair[1] !== 0)
+            .map(pair => pair.join('='))
+            .join('\t');
 
         function bodyForValue(prop) {
             var supported = prop in entry;
@@ -72,7 +90,7 @@
             } else {
                 value = '-1'
             }
-            return prop + '=' + value;
+            return [prop, value];
         }
     }
 

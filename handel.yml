@@ -9,6 +9,11 @@ tags:
 
 environments:
   dev:
+
+    dns-zone:
+      type: route53zone
+      name: font-metrics-dev.cdn.byu.edu
+
     stats-table:
       type: dynamodb
       partition_key: # Required, NOT updateable
@@ -29,8 +34,12 @@ environments:
         runtime: nodejs8.10
         memory: 128
         timeout: 5
+      custom_domains:
+      - dns_name: font-metrics-dev.cdn.byu.edu
+        https_certificate: arn:aws:acm:us-east-1:398230616010:certificate/811c7982-75e1-4565-b81b-4a4dad3e6b85
       dependencies:
         - stats-table
+        - dns-zone
 
 
 
